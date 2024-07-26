@@ -18,13 +18,28 @@ const ProjectForm = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+
+        const data = {
+            title,
+            description,
+            fromDate,
+            toDate
+        }
+
+        console.log(data)
+
         e.preventDefault()
         try {
+            const token = localStorage.getItem("token");
             const response = await axios.post(
                 "http://localhost:5000/api/projects",
-                { title, description, fromDate, toDate }
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                }
+            }
             );
-            console.log(response.data);
             setSuccessMessage("Project Created Successfully");
             setTimeout(() => {
                 navigate("/projects");
