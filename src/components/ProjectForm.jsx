@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
@@ -6,11 +6,10 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 
-const ProjectForm = () => {
+const ProjectForm = ({project}) => {
 
     const [title, setTitle] = useState("");
     const [subTitle, setSubTitle] = useState("");
-    
     const [description, setDescription] = useState("");
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
@@ -18,36 +17,58 @@ const ProjectForm = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+
+        if (localStorage.getItem("token") === null) {
+            navigate("/");
+        }
+        if (project){
+            setTitle(project.title);
+            setSubTitle(project.subTitle);
+            setDescription(project.description);
+            setFromDate(project.fromDate);
+            setToDate(project.toDate);
+        }
+    }, [project]);
+
+
     const handleSubmit = async (e) => {
 
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const config = {
+            headers :
+            {
+                Authorization: `Bearer ${token}`,
+            }
+        };
         const data = {
             title,
+            subTitle,
             description,
             fromDate,
-            toDate
-        }
-
-        console.log(data)
-
-        e.preventDefault()
+            toDate,
+        };
+        console.log(data);
+        let response;
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.post(
-                "http://localhost:5000/api/projects",
-                data,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                }
+            if (project) {
+                response = await axios.put(`http://localhost:5000/api/projects/${project._id}`, data, config);
+                setSuccessMessage("Project updated successfully");
+            } else {
+                response = await axios.post("http://localhost:5000/api/projects", data, config);
+                setSuccessMessage("Project created successfully");
             }
-            );
-            setSuccessMessage("Project Created Successfully");
+        }
+        catch (error) {
+            console.error("Error creating project:", error);
+        }
+        finally {
             setTimeout(() => {
                 navigate("/projects");
             }, 2000);
-        } catch (error) {
-            console.error("Project creation error:", error);
         }
+        
 
     }
 
@@ -55,7 +76,7 @@ const ProjectForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <form className="px-8 py-6 mt-4 text-left bg-white shadow-lg">
+        <form className="px-8 py-6 mt-4 text-left bg-white shadow-lg" onSubmit={handleSubmit}>
             <h3 className="text-2xl font-bold text-center">
                 Create a new project
             </h3>
@@ -94,12 +115,10 @@ const ProjectForm = () => {
                 <button
                     className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
                     type="submit"
-                    onClick={
-                        handleSubmit
-                    }
                 >
-                    Create Project
+                    {project ? "Update" : "Create"}
                 </button>
+                {successMessage && <div className="text-green-500">{successMessage}</div>}
             </div>
         </form>
         
