@@ -3,8 +3,9 @@ import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Register  from "./pages/Register";
-import ProjectForm from "./components/ProjectForm";
 import Projects from "./pages/Projects";
+import Drives from "./pages/Drives";
+import Events from "./pages/Events";
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
-        <Route path="/drives" element={<h1>Drives</h1>} />
+        <Route path="/drives" element={<Drives />} />
+        <Route path="/events" element={<Events />} />
       </Routes>
     </Router>
   );

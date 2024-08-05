@@ -1,26 +1,229 @@
-import React, { useState } from "react";
-import ProjectForm from "../components/ProjectForm";
-import ProjectList from "../components/ProjectList";
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ProjectList from '../components/ProjectList';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { Plus, X } from 'lucide-react';
 
 const Projects = () => {
+  const [projects, setProjects] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    fromDate: null,
+    toDate: null,
+    images: [], // This will store both existing image URLs and new File objects
+  });
 
-    const [selectedProject, setSelectedProject] = useState(null);
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
-    const handleEdit = (project) => {
-        setSelectedProject(project);
+  const fetchProjects = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get("http://localhost:5000/api/projects", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setProjects(response.data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  const handleEdit = (project) => {
+    setFormData({
+      title: project.title || '',
+      description: project.description || '',
+      fromDate: project.fromDate ? new Date(project.fromDate) : null,
+      toDate: project.toDate ? new Date(project.toDate) : null,
+      images: project.images || [],
+    });
+    setIsEditing(true);
+    setEditingId(project._id);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/projects/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchProjects();
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData((prevData) => ({
+      ...prevData,
+      images: [...prevData.images, ...files],
+    }));
+  };
+
+  const removeImage = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: prevData.images.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
     };
 
-    const handleSave = () => {
-        setSelectedProject(null);
-    };
+    const sendData = new FormData();
+    sendData.append('title', formData.title);
+    sendData.append('description', formData.description);
+    sendData.append('fromDate', formData.fromDate);
+    sendData.append('toDate', formData.toDate);
 
-    return (
-        <div>
-            <ProjectForm project={selectedProject} onSave={handleSave} />
-            <ProjectList onEdit={handleEdit} />
-        </div>
-    );
+    formData.images.forEach((image, index) => {
+      sendData.append(`images[${index}]`, JSON.stringify(image.name));
+    });
+    console.log(formData);
+
+    try {
+      if (isEditing) {
+        await axios.patch(`http://localhost:5000/api/projects/${editingId}`, sendData, config);
+      } else {
+        await axios.post('http://localhost:5000/api/projects', sendData, config);
+      }
+      fetchProjects();
+      resetForm();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
+  const handleDateChange = (date, field) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: date,
+    }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      fromDate: null,
+      toDate: null,
+      images: [],
+    });
+    setIsEditing(false);
+    setEditingId(null);
+    setShowForm(false);
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Projects</h1>
+      <button
+        onClick={() => setShowForm(!showForm)}
+        className="mb-4 bg-blue-500 text-white p-2 rounded flex items-center"
+      >
+        {showForm ? <X size={20} /> : <Plus size={20} />}
+        <span className="ml-2">{showForm ? 'Cancel' : 'Add New Project'}</span>
+      </button>
+
+      {showForm && (
+        <form onSubmit={handleSubmit} className="mb-8 bg-gray-100 p-4 rounded-lg">
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            required
+          />
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            required
+          />
+          <div>
+            <label className="block">Images</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              multiple
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+            <div className="flex flex-wrap mt-2">
+              {formData.images.map((image, index) => (
+                <div key={index} className="relative m-1">
+                  <img 
+                    src={typeof image === 'string' ? image : URL.createObjectURL(image)} 
+                    alt={`Image ${index + 1}`} 
+                    className="w-32 h-32 object-cover" 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-2">
+            <label className="block">From Date</label>
+            <DatePicker
+              selected={formData.fromDate}
+              onChange={(date) => handleDateChange(date, 'fromDate')}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+          <div className="mb-2">
+            <label className="block">To Date</label>
+            <DatePicker
+              selected={formData.toDate}
+              onChange={(date) => handleDateChange(date, 'toDate')}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+          <button type="submit" className="bg-green-500 text-white p-2 rounded">
+            {isEditing ? 'Update Project' : 'Create Project'}
+          </button>
+        </form>
+      )}
+
+      <ProjectList 
+        projects={projects} 
+        onEdit={handleEdit} 
+        onDelete={handleDelete} 
+      />
+    </div>
+  );
 };
 
 export default Projects;
