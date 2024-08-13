@@ -235,7 +235,7 @@ const Projects = () => {
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
-          <button type="submit" className="bg-green-500 text-white p-2 rounded">
+          <button type="submit" className="bg-indigo-950 text-white p-2 rounded">
             {isEditing ? "Update Project" : "Create Project"}
           </button>
         </form>
