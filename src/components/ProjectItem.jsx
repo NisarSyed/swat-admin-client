@@ -11,8 +11,8 @@ const ProjectItem = ({project,onEdit, onDelete}) => {
         <h3 className="font-bold">{project.title}</h3>
         {/* <p className="text-sm text-gray-600">ID: {project._id.toString()}</p> */}
         <p className="mt-2">{project.description}</p>
-        <p className="text-sm">From: {project.fromDate}</p>
-        <p className="text-sm">To: {project.toDate}</p>
+        <p className="text-sm">From: {String(project.fromDate)}</p>
+        <p className="text-sm">To: {String(project.toDate)}</p>
         <div className="mt-4 flex justify-end">
           <button className="p-2" onClick={onEdit}>
             <Edit color="blue" />

@@ -1,4 +1,5 @@
 import React from "react";
+import EventsItem from "./EventsItem";
 
 const EventsList = ({event, onDelete, onEdit}) => {
   return (
@@ -12,3 +13,5 @@ const EventsList = ({event, onDelete, onEdit}) => {
     </div>
   );
 }
+
+export default EventsList;

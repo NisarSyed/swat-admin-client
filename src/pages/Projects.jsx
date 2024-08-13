@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ProjectList from '../components/ProjectList';
-import DatePicker from 'react-datepicker';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ProjectList from "../components/ProjectList";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Plus, X } from 'lucide-react';
+import { Plus, X } from "lucide-react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -11,8 +13,8 @@ const Projects = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     fromDate: null,
     toDate: null,
     images: [], // This will store both existing image URLs and new File objects
@@ -24,9 +26,9 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await axios.get("http://localhost:5000/api/projects", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setProjects(response.data);
     } catch (error) {
@@ -36,8 +38,8 @@ const Projects = () => {
 
   const handleEdit = (project) => {
     setFormData({
-      title: project.title || '',
-      description: project.description || '',
+      title: project.title || "",
+      description: project.description || "",
       fromDate: project.fromDate ? new Date(project.fromDate) : null,
       toDate: project.toDate ? new Date(project.toDate) : null,
       images: project.images || [],
@@ -49,7 +51,7 @@ const Projects = () => {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:5000/api/projects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -64,6 +66,13 @@ const Projects = () => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleDescriptionChange = (value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      description: value,
     }));
   };
 
@@ -84,35 +93,42 @@ const Projects = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     };
 
     const sendData = new FormData();
-    sendData.append('title', formData.title);
-    sendData.append('description', formData.description);
-    sendData.append('fromDate', formData.fromDate);
-    sendData.append('toDate', formData.toDate);
+    sendData.append("title", formData.title);
+    sendData.append("description", formData.description);
+    sendData.append("fromDate", formData.fromDate);
+    sendData.append("toDate", formData.toDate);
 
-    formData.images.forEach((image, index) => {
-      sendData.append(`images[${index}]`, JSON.stringify(image.name));
+    formData.images.forEach((image) => {
+      sendData.append("images", image);
     });
-    console.log(formData);
 
     try {
       if (isEditing) {
-        await axios.patch(`http://localhost:5000/api/projects/${editingId}`, sendData, config);
+        await axios.patch(
+          `http://localhost:5000/api/projects/${editingId}`,
+          sendData,
+          config
+        );
       } else {
-        await axios.post('http://localhost:5000/api/projects', sendData, config);
+        await axios.post(
+          "http://localhost:5000/api/projects",
+          sendData,
+          config
+        );
       }
       fetchProjects();
       resetForm();
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -125,8 +141,8 @@ const Projects = () => {
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       fromDate: null,
       toDate: null,
       images: [],
@@ -144,11 +160,14 @@ const Projects = () => {
         className="mb-4 bg-blue-500 text-white p-2 rounded flex items-center"
       >
         {showForm ? <X size={20} /> : <Plus size={20} />}
-        <span className="ml-2">{showForm ? 'Cancel' : 'Add New Project'}</span>
+        <span className="ml-2">{showForm ? "Cancel" : "Add New Project"}</span>
       </button>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="mb-8 bg-gray-100 p-4 rounded-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="mb-8 bg-gray-100 p-4 rounded-lg"
+        >
           <input
             type="text"
             name="title"
@@ -158,18 +177,19 @@ const Projects = () => {
             className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             required
           />
+          <label className="block">Description</label>
           <textarea
             name="description"
-            placeholder="Description"
             value={formData.description}
             onChange={handleInputChange}
             className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             required
-          />
+          ></textarea>
           <div>
             <label className="block">Images</label>
             <input
               type="file"
+              id="images"
               accept="image/*"
               onChange={handleImageChange}
               multiple
@@ -178,10 +198,14 @@ const Projects = () => {
             <div className="flex flex-wrap mt-2">
               {formData.images.map((image, index) => (
                 <div key={index} className="relative m-1">
-                  <img 
-                    src={typeof image === 'string' ? image : URL.createObjectURL(image)} 
-                    alt={`Image ${index + 1}`} 
-                    className="w-32 h-32 object-cover" 
+                  <img
+                    src={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
+                    alt={`Image ${index + 1}`}
+                    className="w-32 h-32 object-cover"
                   />
                   <button
                     type="button"
@@ -199,7 +223,7 @@ const Projects = () => {
             <label className="block">From Date</label>
             <DatePicker
               selected={formData.fromDate}
-              onChange={(date) => handleDateChange(date, 'fromDate')}
+              onChange={(date) => handleDateChange(date, "fromDate")}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
@@ -207,20 +231,20 @@ const Projects = () => {
             <label className="block">To Date</label>
             <DatePicker
               selected={formData.toDate}
-              onChange={(date) => handleDateChange(date, 'toDate')}
+              onChange={(date) => handleDateChange(date, "toDate")}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
           <button type="submit" className="bg-green-500 text-white p-2 rounded">
-            {isEditing ? 'Update Project' : 'Create Project'}
+            {isEditing ? "Update Project" : "Create Project"}
           </button>
         </form>
       )}
 
-      <ProjectList 
-        projects={projects} 
-        onEdit={handleEdit} 
-        onDelete={handleDelete} 
+      <ProjectList
+        projects={projects}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
     </div>
   );
