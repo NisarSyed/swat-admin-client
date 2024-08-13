@@ -73,11 +73,11 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-100 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 lg:p-8 mt-2">
+        <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 lg:p-8">
           <h2 className="mb-4 text-2xl sm:text-3xl lg:text-4xl text-center font-semibold">
             Welcome to SWAT Admin Panel
           </h2>
-          <p className="text-center text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 lg:mb-10">
+          <p className="text-center text-base sm:text-lg lg:text-xl mb-6 sm:mb-6 lg:mb-8">
             This is a simple admin panel for managing users, projects, drives,
             and events.
           </p>

@@ -24,7 +24,7 @@ function Navbar() {
 
   return (
     <header className="bg-blue-950 text-white">
-      <nav className="container mx-auto px-4 sm:px-6 py-3">
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-xl font-bold">
             SWAT
