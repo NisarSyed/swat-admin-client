@@ -10,7 +10,7 @@ const DrivesList = ({drives, onDelete, onEdit}) => {
             drives.map((drive) => (
                 <Item 
                     key={drive._id}
-                    drive={drive}
+                    prop={drive}
                     onEdit={() => onEdit(drive)}
                     onDelete={() => onDelete(drive._id)}
                 />

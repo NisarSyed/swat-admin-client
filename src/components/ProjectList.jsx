@@ -7,7 +7,7 @@ const ProjectList = ({ projects,  onEdit, onDelete }) => {
 	  {projects.map((project) => (
 		<Item
 		  key={project._id}
-		  project={project}
+		  prop={project}
 		  onEdit={() => onEdit(project)}
 		  onDelete={() => onDelete(project._id)}
 		/>
