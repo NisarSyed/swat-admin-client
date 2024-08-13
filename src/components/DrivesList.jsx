@@ -1,5 +1,5 @@
 import React from "react";
-import DrivesItem from "./DrivesItem";
+import Item from "./Item";
 
 
 const DrivesList = ({drives, onDelete, onEdit}) => {
@@ -8,7 +8,7 @@ const DrivesList = ({drives, onDelete, onEdit}) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {
             drives.map((drive) => (
-                <DrivesItem 
+                <Item 
                     key={drive._id}
                     drive={drive}
                     onEdit={() => onEdit(drive)}
