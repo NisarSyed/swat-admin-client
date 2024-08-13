@@ -40,8 +40,8 @@ const Projects = () => {
     setFormData({
       title: project.title || "",
       description: project.description || "",
-      fromDate: project.fromDate ? new Date(project.fromDate) : null,
-      toDate: project.toDate ? new Date(project.toDate) : null,
+      fromDate: project.from || null,
+      toDate: project.to || null,
       images: project.images || [],
     });
     setIsEditing(true);
@@ -104,8 +104,8 @@ const Projects = () => {
     const sendData = new FormData();
     sendData.append("title", formData.title);
     sendData.append("description", formData.description);
-    sendData.append("fromDate", formData.fromDate);
-    sendData.append("toDate", formData.toDate);
+    sendData.append("from", formData.fromDate);
+    sendData.append("to", formData.toDate);
 
     formData.images.forEach((image) => {
       sendData.append("images", image);
