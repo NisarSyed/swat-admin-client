@@ -6,6 +6,7 @@ import {
   Users,
   MapPinned,
   Droplets,
+  Banknote,
   Menu,
   X,
 } from "lucide-react";
@@ -20,6 +21,7 @@ function Navbar() {
     { label: "Drives", link: "/drives", icon: Droplets },
     { label: "Events", link: "/events", icon: MapPinned },
     { label: "Users", link: "/users", icon: Users },
+    { label: "Accounts", link: "/accounts", icon: Banknote }, 
   ];
 
   return (

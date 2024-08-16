@@ -15,8 +15,8 @@ const Projects = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    fromDate: null,
-    toDate: null,
+    from: null,
+    to: null,
     images: [], // This will store both existing image URLs and new File objects
   });
 
@@ -40,8 +40,8 @@ const Projects = () => {
     setFormData({
       title: project.title || "",
       description: project.description || "",
-      fromDate: project.from || null,
-      toDate: project.to || null,
+      from: project.from || null,
+      to: project.to || null,
       images: project.images || [],
     });
     setIsEditing(true);
@@ -104,8 +104,8 @@ const Projects = () => {
     const sendData = new FormData();
     sendData.append("title", formData.title);
     sendData.append("description", formData.description);
-    sendData.append("from", formData.fromDate);
-    sendData.append("to", formData.toDate);
+    sendData.append("from", formData.from);
+    sendData.append("to", formData.to);
 
     formData.images.forEach((image) => {
       sendData.append("images", image);
@@ -143,8 +143,8 @@ const Projects = () => {
     setFormData({
       title: "",
       description: "",
-      fromDate: null,
-      toDate: null,
+      from: null,
+      to: null,
       images: [],
     });
     setIsEditing(false);
@@ -152,11 +152,16 @@ const Projects = () => {
     setShowForm(false);
   };
 
+  const handleAdd = () => {
+    resetForm();
+    setShowForm(!showForm);
+    };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Projects</h1>
       <button
-        onClick={() => setShowForm(!showForm)}
+        onClick={handleAdd}
         className="mb-4 bg-blue-500 text-white p-2 rounded flex items-center"
       >
         {showForm ? <X size={20} /> : <Plus size={20} />}
@@ -177,9 +182,10 @@ const Projects = () => {
             className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             required
           />
-          <label className="block">Description</label>
+
           <textarea
             name="description"
+            placeholder="Description"
             value={formData.description}
             onChange={handleInputChange}
             className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
@@ -222,22 +228,35 @@ const Projects = () => {
           <div className="mb-2">
             <label className="block">From Date</label>
             <DatePicker
-              selected={formData.fromDate}
-              onChange={(date) => handleDateChange(date, "fromDate")}
+              selected={formData.from}
+              onChange={(date) => handleDateChange(date, "from")}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
           <div className="mb-2">
             <label className="block">To Date</label>
             <DatePicker
-              selected={formData.toDate}
-              onChange={(date) => handleDateChange(date, "toDate")}
+              selected={formData.to}
+              onChange={(date) => handleDateChange(date, "to")}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
-          <button type="submit" className="bg-indigo-950 text-white p-2 rounded">
-            {isEditing ? "Update Project" : "Create Project"}
-          </button>
+          <div className="flex justify-between mt-4">
+            <button
+              type="submit"
+              className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
+            >
+              {isEditing ? "Update" : "Create"}
+            </button>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-6 py-2 text-white bg-red-600 rounded-lg hover:bg-red-900"
+            >
+              Reset
+            </button>
+          </div>
+          
         </form>
       )}
 

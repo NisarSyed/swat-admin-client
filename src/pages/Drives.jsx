@@ -13,8 +13,8 @@ const Drives = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    fromDate: null,
-    toDate: null,
+    from: null,
+    to: null,
     images: [],
     location: "",
     volunteers: "",
@@ -37,12 +37,14 @@ const Drives = () => {
     }
   };
 
+
+
   const handleEdit = (drive) => {
     setFormData({
       title: drive.title || "",
       description: drive.description || "",
-      fromDate: drive.from || null,
-      toDate: drive.to || null,
+      from: drive.from || null,
+      to: drive.to || null,
       images: drive.images || [],
       location: drive.location || "",
       volunteers: drive.volunteers || "",
@@ -76,10 +78,9 @@ const Drives = () => {
     const sendData = new FormData();
 
     sendData.append("title", formData.title);
-    sendData.append("subtitle", formData.subtitle);
     sendData.append("description", formData.description);
-    sendData.append("fromDate", formData.fromDate);
-    sendData.append("toDate", formData.toDate);
+    sendData.append("from", formData.from);
+    sendData.append("to", formData.to);
     sendData.append("location", formData.location);
     sendData.append("volunteers", formData.volunteers);
     sendData.append("collaborators", formData.collaborators);
@@ -99,6 +100,7 @@ const Drives = () => {
         },
       });
       fetchDrives();
+      
       setShowForm(false);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -128,14 +130,43 @@ const Drives = () => {
     }));
   };
 
+  const resetForm = () => {
+    setFormData({
+    title: "",
+    description: "",
+    from: null,
+    to: null,
+    images: [],
+    location: "",
+    volunteers: "",
+    collaborators: "",
+    });
+    setIsEditing(false);
+    setEditingId(null);
+    setShowForm(false);
+  };
+
+  const handleDateChange = (date, field) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: date,
+    }));
+  };
+
+  const handleAdd = () => {
+    resetForm();
+    setShowForm(!showForm);
+    };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold">Drives</h1>
       <button
-        onClick={() => setShowForm(!showForm)}
+        onClick={handleAdd}
         className="mt-4 p-2 bg-blue-500 text-white rounded-lg"
       >
-        {showForm ? <X /> : <Plus />}
+        {showForm ? <X size={24} /> : <Plus size={24} />}
+        <span className="ml-2">{showForm ? "Cancel" : "Add Drive"}</span>
       </button>
 
       {showForm && (
@@ -160,14 +191,6 @@ const Drives = () => {
             onChange={handleInputChange}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           ></textarea>
-          <input
-            type="text"
-            name="subtitle"
-            placeholder="Subtitle"
-            value={formData.subtitle}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-          ></input>
           <div>
             <label>Images</label>
             <input
@@ -179,41 +202,42 @@ const Drives = () => {
             ></input>
           </div>
           <div className="flex flex-wrap mt-2">
-            {formData.images.map((image, index) => (
-              <div key={index} className="relative w-1/4 p-2">
-                <button
-                  onClick={() => removeImage(index)}
-                  className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
-                >
-                  <X />
-                </button>
-                <img
-                  src={URL.createObjectURL(image)}
-                  alt="image"
-                  className="w-full rounded-lg"
-                ></img>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4">
-            <label>From Date</label>
+              {formData.images.map((image, index) => (
+                <div key={index} className="relative m-1">
+                  <img
+                    src={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
+                    alt={`Image ${index + 1}`}
+                    className="w-32 h-32 object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>          
+            <div className="mb-2">
+            <label className="block">From Date</label>
             <DatePicker
-              selected={formData.fromDate}
-              onChange={(date) =>
-                setFormData({ ...formData, fromDate: date.toISOString() })
-              }
-              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-            ></DatePicker>
+              selected={formData.from}
+              onChange={(date) => handleDateChange(date, "from")}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
           </div>
-          <div className="mt-4">
-            <label>To Date</label>
+          <div className="mb-2">
+            <label className="block">To Date</label>
             <DatePicker
-              selected={formData.toDate}
-              onChange={(date) =>
-                setFormData({ ...formData, toDate: date.toISOString() })
-              }
-              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-            ></DatePicker>
+              selected={formData.to}
+              onChange={(date) => handleDateChange(date, "to")}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
           </div>
           <input
             type="text"
@@ -239,14 +263,22 @@ const Drives = () => {
             onChange={handleInputChange}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           ></input>
-          <div className="mt-4">
+          <div className="flex justify-between mt-4">
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg"
+              className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
             >
-              Submit
+              {isEditing ? "Update" : "Create"}
+            </button>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-6 py-2 text-white bg-red-600 rounded-lg hover:bg-red-900"
+            >
+              Reset
             </button>
           </div>
+          
         </form>
       )}
       <DrivesList drives={drives} onEdit={handleEdit} onDelete={handleDelete} />

@@ -5,6 +5,8 @@ import Dashboard from "./pages/Dashboard";
 import Register  from "./pages/Register";
 import Projects from "./pages/Projects";
 import Drives from "./pages/Drives";
+import Events from "./pages/Events";
+import Account from "./pages/Account";
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/drives" element={<Drives />} />
-        <Route path="/events" element={<h1>Event</h1>} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/accounts" element={<Account />} />
+
       </Routes>
     </Router>
   );

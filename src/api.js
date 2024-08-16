@@ -31,25 +31,21 @@ export const login = async (username, password) => {
     }
 }
 
-// Get the projects
-export const getProjects = async () => {
+// Fetch user profile   
+export const getUser = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/projects`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_BASE_URL}/me`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
         return response.data;
-    } catch (error) {
-        console.error('Error getting projects:', error);
+
+    }
+    catch (error) {
+        console.error('Error fetching user:', error);
         throw error;
     }
-};
 
-// Get the drives
-export const getDrives = async () => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/drives`);
-        return response.data;
-    } catch (error) {
-        console.error('Error getting drives:', error);
-        throw error;
-    }
-};
-
+    
+}

@@ -17,6 +17,9 @@ function Login() {
         { username, password }
       );
       localStorage.setItem("token", response.data.token);
+      const token = localStorage.getItem("token");
+      console.log("token", token);
+      
       navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
