@@ -9,6 +9,7 @@ import {
   Banknote,
   Menu,
   X,
+  ContactIcon
 } from "lucide-react";
 
 function Navbar() {
@@ -22,6 +23,8 @@ function Navbar() {
     { label: "Events", link: "/events", icon: MapPinned },
     { label: "Users", link: "/users", icon: Users },
     { label: "Accounts", link: "/accounts", icon: Banknote }, 
+    { label: "Contact", link: "/contact", icon: ContactIcon }
+
   ];
 
   return (

@@ -35,7 +35,7 @@ export const login = async (username, password) => {
 export const getUser = async () => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_BASE_URL}/me`, {
+        const response = await axios.get(`${API_BASE_URL}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -46,6 +46,4 @@ export const getUser = async () => {
         console.error('Error fetching user:', error);
         throw error;
     }
-
-    
 }

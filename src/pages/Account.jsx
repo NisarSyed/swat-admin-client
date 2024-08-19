@@ -13,17 +13,31 @@ const Account = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState([]);
     const [formData, setFormData] = useState({
         bankName: "",
         accountNumber: "",
-        ifscCode: "",
         branchName : "",
         accountHolderName : "",
         branchName : "",
     })
 
-    const user = getUser();
-    console.log(user);
+    useEffect(() => {
+        fetchAccount();
+    }
+    , [account]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const user = await getUser();
+                setUser(user);
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        };
+        fetchUser();
+    }, []);
 
 
 
@@ -96,20 +110,16 @@ const Account = () => {
 
         e.preventDefault();
 
+    
+
         const sendData = new FormData();
-        
         sendData.append("bankName", formData.bankName);
         sendData.append("accountNumber", formData.accountNumber);
         sendData.append("branchName", formData.branchName);
         sendData.append("accountHolderName", formData.accountHolderName);
+        sendData.append("user", user._id);
+    
 
-        console.log("sendData", sendData.get("bankName"));
-        console.log("sendData", sendData.get("accountNumber"));
-        console.log("sendData", sendData.get("branchName"));
-        console.log("sendData", sendData.get("accountHolderName"));
-
-
-        console.log(formData);
         const token = localStorage.getItem("token");
         const config = {
             headers: { Authorization: `Bearer ${token}` },
@@ -118,7 +128,7 @@ const Account = () => {
             try {
                 await axios.put(
                     `http://localhost:5000/api/accounts/${editingId}`,
-                    sendData,
+                    sendData ,
                     config
                 );
                 fetchAccount();
@@ -128,7 +138,9 @@ const Account = () => {
             }
         } else {
             try {
-                await axios.post("http://localhost:5000/api/accounts", formData, config);
+                await axios.post("http://localhost:5000/api/accounts", 
+                    sendData
+                    , config);
                 fetchAccount();
                 setShowForm(false);
             } catch (error) {

@@ -19,7 +19,7 @@ const Register = () => {
         
         e.preventDefault();
         try {
-            const response = await axios.post('https://localhost:5000/auth/register', {
+            const response = await axios.post('https://localhost:5000/api/auth/register', {
                 username,
                 password,
                 email

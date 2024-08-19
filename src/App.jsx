@@ -7,8 +7,14 @@ import Projects from "./pages/Projects";
 import Drives from "./pages/Drives";
 import Events from "./pages/Events";
 import Account from "./pages/Account";
+import ContactForm from "./pages/Contact";
 
 function App() {
+
+  const token = localStorage.getItem("token");
+  console.log(token);
+
+
   return (
     <Router>
       <Navbar />
@@ -20,6 +26,8 @@ function App() {
         <Route path="/drives" element={<Drives />} />
         <Route path="/events" element={<Events />} />
         <Route path="/accounts" element={<Account />} />
+        <Route path="/contact" element={<ContactForm />} />
+
 
       </Routes>
     </Router>
