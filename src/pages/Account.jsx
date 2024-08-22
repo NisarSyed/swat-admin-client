@@ -19,7 +19,6 @@ const Account = () => {
         accountNumber: "",
         branchName : "",
         accountHolderName : "",
-        branchName : "",
     })
 
     useEffect(() => {
@@ -139,7 +138,7 @@ const Account = () => {
         } else {
             try {
                 await axios.post("http://localhost:5000/api/accounts", 
-                    sendData
+                    formData
                     , config);
                 fetchAccount();
                 setShowForm(false);

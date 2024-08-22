@@ -8,6 +8,7 @@ import Drives from "./pages/Drives";
 import Events from "./pages/Events";
 import Account from "./pages/Account";
 import ContactForm from "./pages/Contact";
+import User from "./pages/Users";
 
 function App() {
 
@@ -27,8 +28,7 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/accounts" element={<Account />} />
         <Route path="/contact" element={<ContactForm />} />
-
-
+        <Route path="/users" element={<User />} />
       </Routes>
     </Router>
   );

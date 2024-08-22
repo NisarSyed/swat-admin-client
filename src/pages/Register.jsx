@@ -9,8 +9,6 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
 
-    
-
 
     const handleSubmit = async (e) => {
         console.log(username)
@@ -19,7 +17,7 @@ const Register = () => {
         
         e.preventDefault();
         try {
-            const response = await axios.post('https://localhost:5000/api/auth/register', {
+            const response = await axios.post('http://localhost:5000/api/auth/register', {
                 username,
                 password,
                 email

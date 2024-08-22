@@ -69,13 +69,6 @@ const Projects = () => {
     }));
   };
 
-  const handleDescriptionChange = (value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      description: value,
-    }));
-  };
-
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     setFormData((prevData) => ({
