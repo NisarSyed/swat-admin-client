@@ -4,8 +4,6 @@ import ProjectList from "../components/ProjectList";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Plus, X } from "lucide-react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -155,7 +153,7 @@ const Projects = () => {
   const handleAdd = () => {
     resetForm();
     setShowForm(!showForm);
-    };
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -256,7 +254,6 @@ const Projects = () => {
               Reset
             </button>
           </div>
-          
         </form>
       )}
 

@@ -37,8 +37,6 @@ const Drives = () => {
     }
   };
 
-
-
   const handleEdit = (drive) => {
     setFormData({
       title: drive.title || "",
@@ -89,9 +87,6 @@ const Drives = () => {
       sendData.append("images", image);
     });
 
-    console.log("sendData", sendData.get("toDate"));
-    console.log("sendData", sendData.get("fromDate"));
-
     try {
       await axios[method](url, sendData, {
         headers: {
@@ -100,7 +95,7 @@ const Drives = () => {
         },
       });
       fetchDrives();
-      
+
       setShowForm(false);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -132,14 +127,14 @@ const Drives = () => {
 
   const resetForm = () => {
     setFormData({
-    title: "",
-    description: "",
-    from: null,
-    to: null,
-    images: [],
-    location: "",
-    volunteers: "",
-    collaborators: "",
+      title: "",
+      description: "",
+      from: null,
+      to: null,
+      images: [],
+      location: "",
+      volunteers: "",
+      collaborators: "",
     });
     setIsEditing(false);
     setEditingId(null);
@@ -156,7 +151,7 @@ const Drives = () => {
   const handleAdd = () => {
     resetForm();
     setShowForm(!showForm);
-    };
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -202,28 +197,28 @@ const Drives = () => {
             ></input>
           </div>
           <div className="flex flex-wrap mt-2">
-              {formData.images.map((image, index) => (
-                <div key={index} className="relative m-1">
-                  <img
-                    src={
-                      typeof image === "string"
-                        ? image
-                        : URL.createObjectURL(image)
-                    }
-                    alt={`Image ${index + 1}`}
-                    className="w-32 h-32 object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>          
-            <div className="mb-2">
+            {formData.images.map((image, index) => (
+              <div key={index} className="relative m-1">
+                <img
+                  src={
+                    typeof image === "string"
+                      ? image
+                      : URL.createObjectURL(image)
+                  }
+                  alt={`Image ${index + 1}`}
+                  className="w-32 h-32 object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="mb-2">
             <label className="block">From Date</label>
             <DatePicker
               selected={formData.from}
@@ -278,7 +273,6 @@ const Drives = () => {
               Reset
             </button>
           </div>
-          
         </form>
       )}
       <DrivesList drives={drives} onEdit={handleEdit} onDelete={handleDelete} />

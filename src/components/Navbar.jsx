@@ -9,26 +9,38 @@ import {
   Banknote,
   Menu,
   X,
-  ContactIcon
+  ContactIcon,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isLoggedIn = false;
+  const isLoggedIn = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const authToken = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+    // window.location.reload();
+  };
+
+  if (!isLoggedIn) {
+    return null;
+  }
 
   const menuItems = [
-    { label: "Home", link: "/dashboard", icon: Home },
+    { label: "Home", link: "/", icon: Home },
     { label: "Projects", link: "/projects", icon: Briefcase },
     { label: "Drives", link: "/drives", icon: Droplets },
     { label: "Events", link: "/events", icon: MapPinned },
     { label: "Users", link: "/users", icon: Users },
-    { label: "Accounts", link: "/accounts", icon: Banknote }, 
-    { label: "Contact", link: "/contact", icon: ContactIcon }
-
+    { label: "Accounts", link: "/accounts", icon: Banknote },
+    { label: "Contact", link: "/contact", icon: ContactIcon },
   ];
 
   return (
-    <header className="bg-blue-950 text-white">
+    <header disabled={!authToken} className="bg-blue-950 text-white">
       <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-xl font-bold">
@@ -47,18 +59,12 @@ function Navbar() {
             ))}
           </div>
           <div className="hidden md:block">
-            {isLoggedIn ? (
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                Log out
-              </button>
-            ) : (
-              <Link
-                to="/login"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-              >
-                Log in
-              </Link>
-            )}
+            <button
+              onClick={handleLogout}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+            >
+              Log out
+            </button>
           </div>
           <button
             className="md:hidden"
@@ -83,19 +89,12 @@ function Navbar() {
               </Link>
             ))}
             <div className="mt-3">
-              {isLoggedIn ? (
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                  Log out
-                </button>
-              ) : (
-                <Link
-                  to="/login"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-lg transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Log in
-                </Link>
-              )}
+              <button
+                onClick={handleLogout}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+              >
+                Log out
+              </button>
             </div>
           </div>
         )}
