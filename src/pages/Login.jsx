@@ -1,8 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { login } from "../api";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -38,6 +36,7 @@ function Login() {
               <input
                 type="text"
                 placeholder="Username"
+                required
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -48,6 +47,7 @@ function Login() {
               <input
                 type="password"
                 placeholder="Password"
+                required
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -58,8 +58,7 @@ function Login() {
                 className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
                 type="submit"
               >
-                <Link to="/dashboard">Login</Link>{" "}
-                {/* ## Can be removed later */}
+                Log In
               </button>
             </div>
           </div>
