@@ -30,7 +30,7 @@ function Navbar() {
   }
 
   const menuItems = [
-    { label: "Home", link: "/", icon: Home },
+    { label: "Home", link: "/dashboard", icon: Home },
     { label: "Projects", link: "/projects", icon: Briefcase },
     { label: "Drives", link: "/drives", icon: Droplets },
     { label: "Events", link: "/events", icon: MapPinned },
