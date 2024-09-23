@@ -28,7 +28,7 @@ const Drives = () => {
   const fetchDrives = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${process.env.BASE_URL}/drives`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URLP_API_URL}/drives`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDrives(response.data);
@@ -56,7 +56,7 @@ const Drives = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.BASE_URL}/drives/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URLP_API_URL}/drives/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchDrives();
@@ -69,8 +69,8 @@ const Drives = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const url = isEditing
-      ? `${process.env.BASE_URL}/drives/${editingId}`
-      : `${process.env.BASE_URL}/api/drives`;
+      ? `${process.env.REACT_APP_API_URL}/drives/${editingId}`
+      : `${process.env.REACT_APP_API_URL}/api/drives`;
     const method = isEditing ? "patch" : "post";
 
     const sendData = new FormData();

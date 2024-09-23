@@ -39,7 +39,7 @@ const Account = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${process.env.BASE_URL}/accounts`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAccount(response.data);
@@ -66,7 +66,7 @@ const Account = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.BASE_URL}/accounts/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/accounts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchAccount();
@@ -115,7 +115,7 @@ const Account = () => {
     if (isEditing) {
       try {
         await axios.put(
-          `${process.env.BASE_URL}/accounts/${editingId}`,
+          `${process.env.REACT_APP_API_URL}/accounts/${editingId}`,
           sendData,
           config
         );
@@ -127,7 +127,7 @@ const Account = () => {
     } else {
       try {
         await axios.post(
-          `${process.env.BASE_URL}/accounts`,
+          `${process.env.REACT_APP_API_URL}/accounts`,
           sendData,
           config
         );

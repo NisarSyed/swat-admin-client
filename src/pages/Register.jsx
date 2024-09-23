@@ -13,7 +13,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/auth/register`,
+        `${process.env.REACT_APP_API_URLP_API_URLP_API_URL}/auth/register`,
         {
           username,
           password,
