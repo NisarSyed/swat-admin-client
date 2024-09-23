@@ -26,7 +26,7 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/events", {
+      const response = await axios.get(`${process.env.BASE_URL}/events`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEvents(response.data);
@@ -52,7 +52,7 @@ const Events = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/events/${id}`, {
+      await axios.delete(`${process.env.BASE_URL}/events/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchEvents();
@@ -77,7 +77,7 @@ const Events = () => {
     if (isEditing) {
       try {
         await axios.put(
-          `http://localhost:5000/api/events/${editingId}`,
+          `${process.env.BASE_URL}/events/${editingId}`,
           data,
           config
         );
@@ -86,7 +86,7 @@ const Events = () => {
       }
     } else {
       try {
-        await axios.post("http://localhost:5000/api/events", data, config);
+        await axios.post(`${process.env.BASE_URL}/events`, data, config);
       } catch (error) {
         console.error("Error creating event:", error);
       }

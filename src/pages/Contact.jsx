@@ -31,7 +31,7 @@ const ContactForm = () => {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/contact');
+        const response = await axios.get(`${process.env.BASE_URL}/contact`);
         if (response.data.length > 0) {
           const contact = response.data[0];
           setFormData(contact);
@@ -65,9 +65,9 @@ const ContactForm = () => {
             return alert("Please login to continue")
         }
       if (contactId) {
-        await axios.patch(`http://localhost:5000/api/contact/${contactId}`, formData, config);
+        await axios.patch(`${process.env.BASE_URL}/contact/${contactId}`, formData, config);
       } else {
-        const response = await axios.post('http://localhost:5000/api/contact', formData, config);
+        const response = await axios.post(`${process.env.BASE_URL}/contact`, formData, config);
         setContactId(response.data._id);
       }
     } catch (error) {
@@ -84,7 +84,7 @@ const ContactForm = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-      await axios.delete(`http://localhost:5000/api/contact/${contactId}`, config);
+      await axios.delete(`${process.env.BASE_URL}/contact/${contactId}`, config);
       setFormData({
         Name1: '',
         Name2: '',

@@ -9,7 +9,7 @@ function Dashboard() {
   const [error, setError] = useState(null);
 
   const api = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: process.env.BASE_URL,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",

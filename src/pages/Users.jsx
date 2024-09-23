@@ -14,7 +14,7 @@ const UserList = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get(`${process.env.BASE_URL}/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
@@ -26,7 +26,7 @@ const UserList = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/users/${id}`, {
+      await axios.delete(`${process.env.BASE_URL}/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUsers();

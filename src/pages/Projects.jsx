@@ -25,7 +25,7 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/projects", {
+      const response = await axios.get(`${process.env.BASE_URL}/projects`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProjects(response.data);
@@ -50,7 +50,7 @@ const Projects = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/projects/${id}`, {
+      await axios.delete(`${process.env.BASE_URL}/projects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchProjects();
@@ -105,13 +105,13 @@ const Projects = () => {
     try {
       if (isEditing) {
         await axios.patch(
-          `http://localhost:5000/api/projects/${editingId}`,
+          `${process.env.BASE_URL}/projects/${editingId}`,
           sendData,
           config
         );
       } else {
         await axios.post(
-          "http://localhost:5000/api/projects",
+          `${process.env.BASE_URL}/projects`,
           sendData,
           config
         );
