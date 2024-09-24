@@ -1,44 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { getUser } from "../api";
 
-
 const ContactForm = () => {
-
   const [user, setUser] = useState([]);
   const [formData, setFormData] = useState({
-    Name1: '',
-    Name2: '',
-    Email: '',
-    Phone1: '',
-    Phone2: '',
+    Name1: "",
+    Name2: "",
+    Email: "",
+    Phone1: "",
+    Phone2: "",
   });
   const [contactId, setContactId] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-        try {
-            const user = await getUser();
-            setUser(user);
-        } catch (error) {
-            console.error("Error fetching user:", error);
-        }
+      try {
+        const user = await getUser();
+        setUser(user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
     };
     fetchUser();
-}, []);
-
+  }, []);
 
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/contact`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/contact`
+        );
         if (response.data.length > 0) {
           const contact = response.data[0];
           setFormData(contact);
           setContactId(contact._id);
         }
       } catch (error) {
-        console.error('Error fetching contact:', error);
+        console.error("Error fetching contact:", error);
       }
     };
     fetchContact();
@@ -55,56 +54,70 @@ const ContactForm = () => {
     e.preventDefault();
 
     try {
-        const token = localStorage.getItem('token');
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        if (!token){
-            return alert("Please login to continue")
-        }
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      if (!token) {
+        return alert("Please login to continue");
+      }
       if (contactId) {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/contact/${contactId}`, formData, config);
+        await axios.patch(
+          `${process.env.REACT_APP_API_URL}/contact/${contactId}`,
+          formData,
+          config
+        );
       } else {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/contact`, formData, config);
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/contact`,
+          formData,
+          config
+        );
         setContactId(response.data._id);
       }
     } catch (error) {
-      console.error('Error saving contact:', error);
+      console.error("Error saving contact:", error);
     }
   };
 
   const handleDelete = async () => {
     try {
-
-        const token = localStorage.getItem('token');
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-      await axios.delete(`${process.env.REACT_APP_API_URLP_API_URL}/contact/${contactId}`, config);
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/contact/${contactId}`,
+        config
+      );
       setFormData({
-        Name1: '',
-        Name2: '',
-        Email: '',
-        Phone1: '',
-        Phone2: '',
+        Name1: "",
+        Name2: "",
+        Email: "",
+        Phone1: "",
+        Phone2: "",
       });
       setContactId(null);
     } catch (error) {
-      console.error('Error deleting contact:', error);
+      console.error("Error deleting contact:", error);
     }
   };
 
   return (
     <div className="bg-white min-h-screen p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-6 text-[#1e2a4a]">Contact Information</h2>
+        <h2 className="text-2xl font-bold mb-6 text-[#1e2a4a]">
+          Contact Information
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name1:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name1:
+            </label>
             <input
               type="text"
               name="Name1"
@@ -115,7 +128,9 @@ const ContactForm = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name2:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name2:
+            </label>
             <input
               type="text"
               name="Name2"
@@ -125,7 +140,9 @@ const ContactForm = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email:
+            </label>
             <input
               type="email"
               name="Email"
@@ -136,7 +153,9 @@ const ContactForm = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Phone1:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone1:
+            </label>
             <input
               type="text"
               name="Phone1"
@@ -147,7 +166,9 @@ const ContactForm = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Phone2:</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone2:
+            </label>
             <input
               type="text"
               name="Phone2"
@@ -161,7 +182,7 @@ const ContactForm = () => {
               type="submit"
               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              {contactId ? 'Update' : 'Submit'}
+              {contactId ? "Update" : "Submit"}
             </button>
             {contactId && (
               <button

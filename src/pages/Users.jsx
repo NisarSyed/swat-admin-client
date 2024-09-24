@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { PlusIcon } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { PlusIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -13,33 +13,35 @@ const UserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/users`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setUsers(response.data);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       await axios.delete(`${process.env.REACT_APP_API_URL}/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUsers();
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
     }
   };
 
   const handleAddUser = () => {
-    // Implement logic to add a new user
-    navigate('/register');
-    
-    console.log('Add new user');
+    navigate("/register");
+
+    console.log("Add new user");
   };
 
   return (

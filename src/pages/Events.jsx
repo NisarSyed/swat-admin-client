@@ -26,9 +26,12 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/events`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/events`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -86,7 +89,11 @@ const Events = () => {
       }
     } else {
       try {
-        await axios.post(`${process.env.REACT_APP_API_URLP_API_URL}/events`, data, config);
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/events`,
+          data,
+          config
+        );
       } catch (error) {
         console.error("Error creating event:", error);
       }
@@ -126,126 +133,124 @@ const Events = () => {
     }));
   };
 
-
   const handleDateChange = (date, name) => {
     setFormData((prevData) => ({
-        ...prevData,
-        [name]: date,
+      ...prevData,
+      [name]: date,
     }));
-    };
+  };
 
-const resetForm = () => {
+  const resetForm = () => {
     setFormData({
-        title: "",
-        description: "",
-        from: null,
-        toDate: null,
-        images: [],
-        location: "",
+      title: "",
+      description: "",
+      from: null,
+      toDate: null,
+      images: [],
+      location: "",
     });
     setShowForm(false);
     setIsEditing(false);
     setEditingId(null);
-    };
+  };
 
-    const handleAdd = () => {
-      resetForm();
-      setShowForm(!showForm);
-      };
+  const handleAdd = () => {
+    resetForm();
+    setShowForm(!showForm);
+  };
 
-return (
+  return (
     <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold">Events</h1>
-        <button
-            onClick={handleAdd}
-            className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
-        >
+      <h1 className="text-2xl font-bold">Events</h1>
+      <button
+        onClick={handleAdd}
+        className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
+      >
         {showForm ? <X size={20} /> : <Plus size={20} />}
         <span className="ml-2">{showForm ? "Cancel" : "Add New Event"}</span>
-        </button>
+      </button>
 
-        {showForm && (
-            <form 
-            onSubmit={handleFormSubmit}
-            className="mb-8 bg-gray-100 p-4 rounded-lg"
-            >
-            <input
-                type = "text"
-                name = "title"
-                placeholder = "Title"
-                value = {formData.title}
-                onChange = {handleInputChange}
-                className = "w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                required
+      {showForm && (
+        <form
+          onSubmit={handleFormSubmit}
+          className="mb-8 bg-gray-100 p-4 rounded-lg"
+        >
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            required
+          />
+          <label className="block">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            required
+          ></textarea>
+          <div>
+            <label className="block">From</label>
+            <DatePicker
+              selected={formData.from}
+              onChange={(date) => handleDateChange(date, "from")}
+              className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
-            <label className="block">Description</label>
-            <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                required
-            ></textarea>
-            <div>
-                <label className="block">From</label>
-                <DatePicker
-                selected={formData.from}
-                onChange={(date) => handleDateChange(date, "from")}
-                className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                />
-            </div>
-            <div>
-                <label className="block">To</label>
-                <DatePicker
-                selected={formData.to}
-                onChange={(date) => handleDateChange(date, "to")}
-                className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                />
-            </div>
-            <div>
-                <label className="block">Images</label>
-                <input
-                type="file"
-                multiple
-                onChange={handleImageChange}
-                className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                />
-            </div>
-            <div>
-                <label className="block">Location</label>
-                <input
-                type="text"
-                name="location"
-                placeholder="Location"
-                value={formData.location}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+          </div>
+          <div>
+            <label className="block">To</label>
+            <DatePicker
+              selected={formData.to}
+              onChange={(date) => handleDateChange(date, "to")}
+              className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+          <div>
+            <label className="block">Images</label>
+            <input
+              type="file"
+              multiple
+              onChange={handleImageChange}
+              className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+          <div>
+            <label className="block">Location</label>
+            <input
+              type="text"
+              name="location"
+              placeholder="Location"
+              value={formData.location}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
 
+          <div className="flex flex-wrap mt-2">
+            {formData.images.map((image, index) => (
+              <div key={index} className="relative m-1">
+                <img
+                  src={
+                    typeof image === "string"
+                      ? image
+                      : URL.createObjectURL(image)
+                  }
+                  alt={`Image ${index + 1}`}
+                  className="w-32 h-32 object-cover"
                 />
-            </div>
-
-            <div className="flex flex-wrap mt-2">
-              {formData.images.map((image, index) => (
-                <div key={index} className="relative m-1">
-                  <img
-                    src={
-                      typeof image === "string"
-                        ? image
-                        : URL.createObjectURL(image)
-                    }
-                    alt={`Image ${index + 1}`}
-                    className="w-32 h-32 object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
           <div className="flex justify-between mt-4">
             <button
               type="submit"
@@ -261,18 +266,11 @@ return (
               Reset
             </button>
           </div>
-          
         </form>
       )}
-      <EventsList
-            events={events}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+      <EventsList events={events} onEdit={handleEdit} onDelete={handleDelete} />
     </div>
-
   );
-}
-
+};
 
 export default Events;

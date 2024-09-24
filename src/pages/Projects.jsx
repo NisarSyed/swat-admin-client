@@ -25,9 +25,12 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/projects`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/projects`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setProjects(response.data);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -111,7 +114,7 @@ const Projects = () => {
         );
       } else {
         await axios.post(
-          `${process.env.REACT_APP_API_URLP_API_URL}/projects`,
+          `${process.env.REACT_APP_API_URL}/projects`,
           sendData,
           config
         );

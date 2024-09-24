@@ -28,9 +28,12 @@ const Drives = () => {
   const fetchDrives = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${process.env.REACT_APP_API_URLP_API_URL}/drives`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/drives`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setDrives(response.data);
     } catch (error) {
       console.error("Error fetching drives:", error);
@@ -56,7 +59,7 @@ const Drives = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URLP_API_URL}/drives/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/drives/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchDrives();
