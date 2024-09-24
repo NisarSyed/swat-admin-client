@@ -3,6 +3,8 @@ import axios from "axios";
 import { PlusIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
@@ -14,12 +16,9 @@ const UserList = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${API_URL}/users`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -29,7 +28,7 @@ const UserList = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URL}/users/${id}`, {
+      await axios.delete(`${API_URL}/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchUsers();

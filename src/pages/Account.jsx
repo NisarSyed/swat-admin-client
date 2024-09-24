@@ -5,6 +5,8 @@ import { Plus, X } from "lucide-react";
 import AccountList from "../components/AccountsList";
 import { getUser } from "../api";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Account = () => {
   const [account, setAccount] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -39,7 +41,7 @@ const Account = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/accounts`, {
+      const response = await axios.get(`${API_URL}/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAccount(response.data);
@@ -66,7 +68,7 @@ const Account = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URL}/accounts/${id}`, {
+      await axios.delete(`${API_URL}/accounts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchAccount();
@@ -114,11 +116,7 @@ const Account = () => {
     };
     if (isEditing) {
       try {
-        await axios.put(
-          `${process.env.REACT_APP_API_URL}/accounts/${editingId}`,
-          sendData,
-          config
-        );
+        await axios.put(`${API_URL}/accounts/${editingId}`, sendData, config);
         fetchAccount();
         setShowForm(false);
       } catch (error) {
@@ -126,11 +124,7 @@ const Account = () => {
       }
     } else {
       try {
-        await axios.post(
-          `${process.env.REACT_APP_API_URL}/accounts`,
-          sendData,
-          config
-        );
+        await axios.post(`${API_URL}/accounts`, sendData, config);
         fetchAccount();
         setShowForm(false);
       } catch (error) {

@@ -5,6 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Plus, X } from "lucide-react";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -26,12 +28,9 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/events`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${API_URL}/events`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -55,7 +54,7 @@ const Events = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URL}/events/${id}`, {
+      await axios.delete(`${API_URL}/events/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchEvents();
@@ -79,21 +78,13 @@ const Events = () => {
     formData.images.forEach((image) => data.append("images", image));
     if (isEditing) {
       try {
-        await axios.put(
-          `${process.env.REACT_APP_API_URL}/events/${editingId}`,
-          data,
-          config
-        );
+        await axios.put(`${API_URL}/events/${editingId}`, data, config);
       } catch (error) {
         console.error("Error updating event:", error);
       }
     } else {
       try {
-        await axios.post(
-          `${process.env.REACT_APP_API_URL}/events`,
-          data,
-          config
-        );
+        await axios.post(`${API_URL}/events`, data, config);
       } catch (error) {
         console.error("Error creating event:", error);
       }

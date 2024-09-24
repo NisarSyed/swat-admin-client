@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Plus, X } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -25,12 +27,9 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/projects`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${API_URL}/projects`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setProjects(response.data);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -53,7 +52,7 @@ const Projects = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URL}/projects/${id}`, {
+      await axios.delete(`${API_URL}/projects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchProjects();
@@ -107,17 +106,9 @@ const Projects = () => {
 
     try {
       if (isEditing) {
-        await axios.patch(
-          `${process.env.REACT_APP_API_URL}/projects/${editingId}`,
-          sendData,
-          config
-        );
+        await axios.patch(`${API_URL}/projects/${editingId}`, sendData, config);
       } else {
-        await axios.post(
-          `${process.env.REACT_APP_API_URL}/projects`,
-          sendData,
-          config
-        );
+        await axios.post(`${API_URL}/projects`, sendData, config);
       }
       fetchProjects();
       resetForm();

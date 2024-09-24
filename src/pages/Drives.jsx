@@ -5,6 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Plus, X } from "lucide-react";
 import DrivesList from "../components/DrivesList";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Drives = () => {
   const [drives, setDrives] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -28,12 +30,9 @@ const Drives = () => {
   const fetchDrives = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/drives`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${API_URL}/drives`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setDrives(response.data);
     } catch (error) {
       console.error("Error fetching drives:", error);
@@ -59,7 +58,7 @@ const Drives = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${process.env.REACT_APP_API_URL}/drives/${id}`, {
+      await axios.delete(`${API_URL}/drives/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchDrives();
@@ -72,8 +71,8 @@ const Drives = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const url = isEditing
-      ? `${process.env.REACT_APP_API_URL}/drives/${editingId}`
-      : `${process.env.REACT_APP_API_URL}/api/drives`;
+      ? `${API_URL}/drives/${editingId}`
+      : `${API_URL}/api/drives`;
     const method = isEditing ? "patch" : "post";
 
     const sendData = new FormData();

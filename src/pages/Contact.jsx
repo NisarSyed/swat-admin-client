@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getUser } from "../api";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ContactForm = () => {
   const [user, setUser] = useState([]);
   const [formData, setFormData] = useState({
@@ -28,9 +30,7 @@ const ContactForm = () => {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/contact`
-        );
+        const response = await axios.get(`${API_URL}/contact`);
         if (response.data.length > 0) {
           const contact = response.data[0];
           setFormData(contact);
@@ -64,14 +64,10 @@ const ContactForm = () => {
         return alert("Please login to continue");
       }
       if (contactId) {
-        await axios.patch(
-          `${process.env.REACT_APP_API_URL}/contact/${contactId}`,
-          formData,
-          config
-        );
+        await axios.patch(`${API_URL}/contact/${contactId}`, formData, config);
       } else {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/contact`,
+          `${API_URL}/contact`,
           formData,
           config
         );
@@ -90,10 +86,7 @@ const ContactForm = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/contact/${contactId}`,
-        config
-      );
+      await axios.delete(`${API_URL}/contact/${contactId}`, config);
       setFormData({
         Name1: "",
         Name2: "",
